@@ -1,13 +1,13 @@
 {
   "type": "amazon-ebs",
-  "region": "eu-central-1",
+  "region": "{{user `aws_region`}}",
   "source_ami_filter": {
     "filters": {
       "virtualization-type": "hvm",
       "name": "ubuntu/images/*ubuntu-{{user `ubuntu_codename`}}-{{user `ubuntu_version`}}-amd64-server-*",
       "root-device-type": "ebs"
     },
-    "owners": ["099720109477"],
+    "owners": ["{{user `base_image_account`}}"],
     "most_recent": true
   },
   "subnet_filter": {
@@ -27,5 +27,5 @@
   "associate_public_ip_address": true,
   "instance_type": "{{user `vm_size`}}",
   "ssh_username": "ubuntu",
-  "ami_name": "smartlyio/github-actions-runner/ubuntu-{{user `ubuntu_version`}}-{{timestamp}}"
+  "ami_name": "{{user `owner_name`}}/github-actions-runner/ubuntu-{{user `ubuntu_version`}}-{{timestamp}}"
 }

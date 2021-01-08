@@ -1,0 +1,16 @@
+{
+  "image_folder": "/imagegeneration",
+  "imagedata_file": "/imagegeneration/imagedata.json",
+  "installer_script_folder": "/imagegeneration/installers",
+  "helper_script_folder": "/imagegeneration/helpers",
+  "vm_size": "c5.large",
+  "capture_name_prefix": "packer",
+  "image_version": "dev",
+  "image_os": "ubuntu18",
+  "run_validation_diskspace": "false",
+  "ubuntu_version": "18.04",
+  "ubuntu_codename": "bionic",
+  "aws_region": "eu-central-1",
+  "base_image_account": "099720109477",
+  "owner_name": "smartlyio/sjagoe-test"
+}

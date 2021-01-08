@@ -1,16 +1,34 @@
 #!/usr/bin/env bash
 
-UPSTREAM_TEMPLATE="/home/sjagoe/workspace/other/github/virtual-environments/images/linux/ubuntu1804.json"
-BUILDER_FILE="/home/sjagoe/active-repos/github-actions-environment/builder-definition.json"
+if [[ "$#" -ne 1 ]]; then
+    echo "Expected argument of AWS_PROFILE"
+    exit 1
+fi
 
-VARIABLES="$(
-    jq . < "$UPSTREAM_TEMPLATE" |
-       jq '.variables | .vm_size = "c5.large" | .ubuntu_version = "18.04" | .ubuntu_codename = "bionic"'
-)"
+AWS_PROFILE="$1"
+export AWS_PROFILE
 
-PACKER_TEMPLATE="$(
-    jq . < "$UPSTREAM_TEMPLATE" |
-       jq --argjson builder "$(< "$BUILDER_FILE")" --argjson variables "$VARIABLES" '. | .builders = [$builder] | .variables = $variables'
-)"
+if [ -d virtual-environments ]; then
+    (cd virtual-environments && git pull --ff-only)
+else
+    git clone https://github.com/actions/virtual-environments
+fi
 
-echo "$PACKER_TEMPLATE" | jq .
+BUILD_DIRECTORY="./build"
+TEMPLATE_DIRECTORY="./virtual-environments/images/linux"
+UPSTREAM_TEMPLATE="${TEMPLATE_DIRECTORY}/ubuntu1804.json"
+BUILDER_FILE="./builder-definition.json"
+VARIABLES_FILE="./variables.json"
+
+
+mkdir -p "$BUILD_DIRECTORY"
+rsync -aP --delete "${TEMPLATE_DIRECTORY}/" "${BUILD_DIRECTORY}/"
+
+jq . < "$UPSTREAM_TEMPLATE" |
+    jq --argjson builder "$(< "$BUILDER_FILE")" --argjson variables "$(< "$VARIABLES_FILE")" '. | .builders = [$builder] | .variables = $variables' |
+    jq '. | del(."sensitive-variables")' > "${BUILD_DIRECTORY}/packer-template.tmp.json"
+
+(
+    cd "$BUILD_DIRECTORY" || exit 1
+    packer build packer-template.tmp.json
+)
