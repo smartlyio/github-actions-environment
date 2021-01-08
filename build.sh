@@ -23,6 +23,7 @@ VARIABLES_FILE="./variables.json"
 
 mkdir -p "$BUILD_DIRECTORY"
 rsync -aP --delete "${TEMPLATE_DIRECTORY}/" "${BUILD_DIRECTORY}/"
+sed '/waagent/ d' -i "${BUILD_DIRECTORY}/scripts/installers/configure-environment.sh"
 
 jq . < "$UPSTREAM_TEMPLATE" |
     jq --argjson builder "$(< "$BUILDER_FILE")" --argjson variables "$(< "$VARIABLES_FILE")" '. | .builders = [$builder] | .variables = $variables' |
