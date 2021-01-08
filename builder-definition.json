@@ -1,0 +1,31 @@
+{
+  "type": "amazon-ebs",
+  "region": "eu-central-1",
+  "source_ami_filter": {
+    "filters": {
+      "virtualization-type": "hvm",
+      "name": "ubuntu/images/*ubuntu-{{user `ubuntu_codename`}}-{{user `ubuntu_version`}}-amd64-server-*",
+      "root-device-type": "ebs"
+    },
+    "owners": ["099720109477"],
+    "most_recent": true
+  },
+  "subnet_filter": {
+    "filters": {
+      "tag:PackerBuild": "true"
+    },
+    "random": true
+  },
+  "launch_block_device_mappings": [
+    {
+      "device_name": "/dev/sda1",
+      "encrypted": "true",
+      "volume_size": 24,
+      "delete_on_termination": true
+    }
+  ],
+  "associate_public_ip_address": true,
+  "instance_type": "{{user `vm_size`}}",
+  "ssh_username": "ubuntu",
+  "ami_name": "smartlyio/github-actions-runner/ubuntu-{{user `ubuntu_version`}}-{{timestamp}}"
+}
