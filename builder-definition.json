@@ -20,7 +20,7 @@
     {
       "device_name": "/dev/sda1",
       "encrypted": "true",
-      "volume_size": 24,
+      "volume_size": 100,
       "delete_on_termination": true
     }
   ],
