@@ -14,7 +14,7 @@ e.g. `packer-github-actions`.
 
 ## Running the packer build
 
-To run packer manually, change to the `packer` subdirectory and run:
+To run packer manually, run the following:
 
 ```
 $ export AWS_PROFILE=packer-github-actions
