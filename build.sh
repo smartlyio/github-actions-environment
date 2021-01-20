@@ -19,7 +19,6 @@ TEMPLATE_DIRECTORY="./virtual-environments/images/linux"
 UPSTREAM_TEMPLATE="${TEMPLATE_DIRECTORY}/ubuntu1804.json"
 BUILDER_FILE="./builder-definition.json"
 VARIABLES_FILE="./variables.json"
-ADDUSER_FILE="./add-user.json"
 
 
 mkdir -p "$BUILD_DIRECTORY"
@@ -28,8 +27,7 @@ sed '/waagent/ d' -i "${BUILD_DIRECTORY}/scripts/installers/configure-environmen
 
 jq . < "$UPSTREAM_TEMPLATE" |
     jq --argjson builder "$(< "$BUILDER_FILE")" --argjson variables "$(< "$VARIABLES_FILE")" '. | .builders = [$builder] | .variables = $variables' |
-    jq '. | del(."sensitive-variables") | del(.provisioners | last)' |
-    jq --argjson adduser "$(< "$ADDUSER_FILE")" '. | .provisioners = [$adduser] + .provisioners' > "${BUILD_DIRECTORY}/packer-template.tmp.json"
+    jq '. | del(."sensitive-variables") | del(.provisioners | last)' > "${BUILD_DIRECTORY}/packer-template.tmp.json"
 
 (
     cd "$BUILD_DIRECTORY" || exit 1
