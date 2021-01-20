@@ -12,5 +12,5 @@
   "ubuntu_codename": "bionic",
   "aws_region": "eu-central-1",
   "base_image_account": "099720109477",
-  "owner_name": "smartlyio/sjagoe-test"
+  "owner_name": "smartlyio"
 }
