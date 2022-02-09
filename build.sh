@@ -21,6 +21,11 @@ BUILDER_FILE="./builder-definition.json"
 VARIABLES_FILE="./variables.json"
 
 
+# AWS_MAX_ATTEMPTS defaults to 40; we need to wait much longer for the huge image we build.
+export AWS_MAX_ATTEMPTS=400
+# AWS_POLL_DELAY_SECONDS defaults to 2 to 5 seconds, depending on task. Set to 10s for very long wait times for image to be ready
+export AWS_POLL_DELAY_SECONDS=10
+
 mkdir -p "$BUILD_DIRECTORY"
 rsync -aP --delete "${TEMPLATE_DIRECTORY}/" "${BUILD_DIRECTORY}/"
 sed '/waagent/ d' -i "${BUILD_DIRECTORY}/scripts/installers/configure-environment.sh"
